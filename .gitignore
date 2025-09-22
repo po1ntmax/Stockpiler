@@ -8,3 +8,6 @@ Stockpiler.dist
 .vs
 env*
 *.zip
+
+.idea
+.python-version

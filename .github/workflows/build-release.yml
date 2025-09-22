@@ -1,0 +1,111 @@
+name: Build and Release
+
+on:
+  workflow_dispatch:  # Allows manual triggering
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+        
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install pyinstaller
+        
+    - name: Build with PyInstaller
+      run: |
+        pyinstaller --onefile --windowed --icon=Bmat.ico --name=Stockpiler
+        
+    - name: Copy additional files
+      run: |
+          copy *.csv dist/
+          copy Bmat.ico dist/
+          xcopy /E /I CheckImages dist\CheckImages
+          xcopy /E /I UI dist\UI
+          xcopy /E /I Compare dist\Compare
+          if not exist dist\Stockpiles mkdir dist\Stockpiles
+        
+    - name: Create archive
+      run: |
+          cd dist
+          powershell Compress-Archive -Path * -DestinationPath ../Stockpiler-Windows.zip
+        
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: Stockpiler
+        path: |
+          Stockpiler-Windows.zip
+        if-no-files-found: error
+
+#  release:
+#    needs: build
+#    runs-on: ubuntu-latest
+#    if: github.event_name == 'workflow_dispatch'
+#
+#    steps:
+#    - name: Download all artifacts
+#      uses: actions/download-artifact@v3
+#
+#    - name: List downloaded files
+#      run: |
+#        find . -name "*.zip" -o -name "*.tar.gz" | head -10
+#
+#    - name: Create Release
+#      id: create_release
+#      uses: actions/create-release@v1
+#      env:
+#        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#      with:
+#        tag_name: v${{ github.run_number }}
+#        release_name: Stockpiler v${{ github.run_number }}
+#        body: |
+#          Automated build of Stockpiler application.
+#
+#          **Downloads:**
+#          - Windows: Stockpiler-Windows.zip
+#          - macOS: Stockpiler-macOS.zip
+#          - Linux: Stockpiler-Linux.tar.gz
+#
+#          Built on: ${{ github.run_number }}
+#        draft: false
+#        prerelease: false
+#
+#    - name: Upload Windows Release Asset
+#      uses: actions/upload-release-asset@v1
+#      env:
+#        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#      with:
+#        upload_url: ${{ steps.create_release.outputs.upload_url }}
+#        asset_path: ./Stockpiler-windows-latest/Stockpiler-Windows.zip
+#        asset_name: Stockpiler-Windows.zip
+#        asset_content_type: application/zip
+#
+#    - name: Upload macOS Release Asset
+#      uses: actions/upload-release-asset@v1
+#      env:
+#        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#      with:
+#        upload_url: ${{ steps.create_release.outputs.upload_url }}
+#        asset_path: ./Stockpiler-macos-latest/Stockpiler-macOS.zip
+#        asset_name: Stockpiler-macOS.zip
+#        asset_content_type: application/zip
+#
+#    - name: Upload Linux Release Asset
+#      uses: actions/upload-release-asset@v1
+#      env:
+#        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#      with:
+#        upload_url: ${{ steps.create_release.outputs.upload_url }}
+#        asset_path: ./Stockpiler-ubuntu-latest/Stockpiler-Linux.tar.gz
+#        asset_name: Stockpiler-Linux.tar.gz
+#        asset_content_type: application/gzip
