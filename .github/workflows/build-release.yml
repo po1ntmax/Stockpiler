@@ -32,7 +32,7 @@ jobs:
         xcopy /E /I CheckImages dist\CheckImages
         xcopy /E /I UI dist\UI
         xcopy /E /I Compare dist\Compare
-        if not exist dist\Stockpiles mkdir dist\Stockpiles
+        xcopy /E /I Stockpiles dist\Stockpiles
         
     - name: Create archive
       run: |
