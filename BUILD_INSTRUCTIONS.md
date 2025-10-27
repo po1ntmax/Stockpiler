@@ -10,16 +10,16 @@ This repository includes a GitHub Actions workflow that automatically builds the
 2. Select the **Build and Release** workflow
 3. Click **Run workflow** button
 4. The workflow will:
-   - Build the application for all three platforms (Windows, macOS, Linux)
-   - Create a new release with version number based on the run number
-   - Upload the executable files as release assets
+   - Build the application for Windows platform
+   - Upload the executable file as an artifact
+   - (Optional) Create a new release with the executable file
 
 ### What Gets Built
 
-The workflow creates:
+The current workflow creates:
 - **Windows**: `Stockpiler-Windows.zip` - Contains `Stockpiler.exe` and all required files
-- **macOS**: `Stockpiler-macOS.zip` - Contains `Stockpiler` executable and all required files  
-- **Linux**: `Stockpiler-Linux.tar.gz` - Contains `Stockpiler` executable and all required files
+
+*Note: The workflow is currently configured for Windows-only builds. The multi-platform release functionality is commented out but can be enabled by uncommenting the release section in the workflow file.*
 
 ### Files Included in Build
 
