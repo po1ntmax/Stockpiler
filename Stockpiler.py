@@ -1,5 +1,6 @@
 import os
 import os.path
+import sys
 import time
 from tkinter import *
 from tkinter import ttk
@@ -58,11 +59,20 @@ class items(object):
 mouse = Controller()
 current_mouse_position = mouse.position
 
-if not os.path.exists("./logs"):
-	os.makedirs("./logs")
+# Get the directory where the executable is running from
+if getattr(sys, 'frozen', False):
+    # Running as PyInstaller executable
+    exe_dir = os.path.dirname(sys.executable)
+else:
+    # Running as Python script
+    exe_dir = os.path.dirname(os.path.abspath(__file__))
+
+logs_dir = os.path.join(exe_dir, "logs")
+if not os.path.exists(logs_dir):
+	os.makedirs(logs_dir)
 
 logfilename = datetime.datetime.now().strftime("%Y-%m-%d-%H%M%S")
-logfilename = "logs/Stockpiler-log-" + logfilename + ".txt"
+logfilename = os.path.join(logs_dir, "Stockpiler-log-" + logfilename + ".txt")
 logging.basicConfig(filename=logfilename, format='%(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 print("Log file created: " + logfilename)
 logging.info(str(datetime.datetime.now()) + ' Log Created')
@@ -75,8 +85,8 @@ def get_file_directory(file):
 # Log cleanup of any contents of logs folder older than 7 days
 now = time.time()
 cutoff = now - (7 * 86400)
-files = os.listdir(os.path.join(get_file_directory(__file__), "logs"))
-file_path = os.path.join(get_file_directory(__file__), "logs/")
+files = os.listdir(logs_dir)
+file_path = logs_dir + os.sep
 for xfile in files:
 	if os.path.isfile(str(file_path) + xfile):
 		t = os.stat(str(file_path) + xfile)

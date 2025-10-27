@@ -11,4 +11,7 @@ env*
 
 .idea
 .python-version
-__pycache__
+__pycache__/
+build/
+dist/
+*.spec

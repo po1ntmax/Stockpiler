@@ -34,17 +34,11 @@ jobs:
         xcopy /E /I Compare dist\Compare
         xcopy /E /I Stockpiles dist\Stockpiles
         
-    - name: Create archive
-      run: |
-        cd dist
-        powershell Compress-Archive -Path * -DestinationPath ../Stockpiler-Windows.zip
-        
     - name: Upload artifacts
       uses: actions/upload-artifact@v4
       with:
-        name: Stockpiler
-        path: |
-          Stockpiler-Windows.zip
+        name: Stockpiler-Windows
+        path: dist/
         if-no-files-found: error
 
 #  release:
@@ -71,12 +65,12 @@ jobs:
 #          Automated build of Stockpiler application.
 #          
 #          **Downloads:**
-#          - Windows: Stockpiler-Windows.zip
-#          - macOS: Stockpiler-macOS.zip
-#          - Linux: Stockpiler-Linux.tar.gz
+#          - Windows: Stockpiler-Windows (contains dist/ folder with executable)
+#          - macOS: Stockpiler-macOS (contains dist/ folder with executable)
+#          - Linux: Stockpiler-Linux (contains dist/ folder with executable)
 #          
 #          Built on: ${{ github.run_number }}
 #        files: |
-#          ./Stockpiler-windows-latest/Stockpiler-Windows.zip
-#          ./Stockpiler-macos-latest/Stockpiler-macOS.zip
-#          ./Stockpiler-ubuntu-latest/Stockpiler-Linux.tar.gz
+#          ./Stockpiler-Windows/dist/**
+#          ./Stockpiler-macOS/dist/**
+#          ./Stockpiler-Linux/dist/**
