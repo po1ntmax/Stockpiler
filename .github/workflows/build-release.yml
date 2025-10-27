@@ -37,11 +37,17 @@ jobs:
         xcopy /E /I Compare dist\Compare
         xcopy /E /I Stockpiles dist\Stockpiles
         
+    - name: Create release archive
+      run: |
+        cd dist
+        powershell Compress-Archive -Path * -DestinationPath ../Stockpiler-Windows.zip
+        
     - name: Upload artifacts
       uses: actions/upload-artifact@v4
       with:
         name: Stockpiler-Windows
-        path: dist/
+        path: |
+          Stockpiler-Windows.zip
         if-no-files-found: error
 
   release:
@@ -75,11 +81,11 @@ jobs:
           Automated release of Stockpiler application.
           
           **Download:**
-          - Windows: Stockpiler-Windows (contains dist/ folder with executable)
+          - Windows: Stockpiler-Windows.zip (contains executable and all required files)
           
           Built from tag: ${{ github.ref_name }}
           Commit: ${{ github.sha }}
         files: |
-          ./release-files/**
-        draft: false
+          ./release-files/Stockpiler-Windows.zip
+        draft: true
         prerelease: false
