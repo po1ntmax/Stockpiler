@@ -1247,11 +1247,14 @@ TableTab = ttk.Frame(TabControl)
 TabControl.add(TableTab, text="Results")
 SettingsTab = ttk.Frame(TabControl)
 TabControl.add(SettingsTab, text="Settings")
+orderTab = ttk.Frame(TabControl)
+TabControl.add(orderTab, text="Logistics Order")
 TabControl.pack(expand=1, fill=BOTH)
 
 FilterCanvas = Canvas(FilterTab)
 TableCanvas = Canvas(TableTab)
 SettingsCanvas = Canvas(SettingsTab)
+orderCanvas = Canvas(orderTab)
 
 FilterCanvas.bind_all("<MouseWheel>", _on_mousewheel)
 scrollbar = ttk.Scrollbar(FilterTab, orient=VERTICAL, command=FilterCanvas.yview)
@@ -1269,16 +1272,31 @@ FilterCanvas.bind('<Configure>', lambda e: FilterCanvas.configure(scrollregion=F
 FilterCanvas.pack(side=LEFT, fill=BOTH, expand=1)
 TableCanvas.pack(side=TOP, fill=BOTH, expand=1)
 SettingsCanvas.pack(side=TOP, fill=BOTH, expand=1)
+orderCanvas.pack(side=TOP, fill=BOTH, expand=1)
 
 FilterFrame = ttk.Frame(FilterCanvas)
 TableFrame = ttk.Frame(TableCanvas)
 SettingsFrame = ttk.Frame(SettingsCanvas)
+orderFrame = ttk.Frame(orderCanvas)
+
 
 # create_window height for Filter canvas should be roughly: is below
 FilterCanvas.create_window((0, 0), window=FilterFrame, anchor="nw", height="2071p", width="550p")
 TableCanvas.create_window((0, 0), window=TableFrame, anchor="nw", height="410p", width="402p")
 SettingsCanvas.create_window((0, 0), window=SettingsFrame, anchor="nw", height="500p", width="402p")
+orderCanvas.create_window((0, 0), window=orderFrame, anchor="nw", height="500p", width="402p")
 
+small_arms_list = ttk.Frame(orderFrame)
+small_arms_list.pack(side=TOP,fill=BOTH)
+ttk.Label(
+	small_arms_list, text="Small Arms"
+	).pack(
+		side=TOP,fill=BOTH
+	)
+rifles = ttk.Frame(small_arms_list)
+rifles.pack(side=TOP,fill=BOTH)
+ttk.Label(rifles, text="Rifles").pack(side=TOP,fill=BOTH)
+Sheet(rifles,data=["a","b"]).pack(side=TOP,fill=BOTH)
 FilterFrame.bind(
 	"<Configure>",
 	lambda e: FilterCanvas.configure(
