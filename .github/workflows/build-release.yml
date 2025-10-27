@@ -40,37 +40,3 @@ jobs:
         name: Stockpiler-Windows
         path: dist/
         if-no-files-found: error
-
-#  release:
-#    needs: build
-#    runs-on: ubuntu-latest
-#    if: github.event_name == 'workflow_dispatch'
-#
-#    steps:
-#    - name: Download all artifacts
-#      uses: actions/download-artifact@v4
-#
-#    - name: List downloaded files
-#      run: |
-#        find . -name "*.zip" -o -name "*.tar.gz" | head -10
-#
-#    - name: Create Release and Upload Assets
-#      uses: softprops/action-gh-release@v1
-#      env:
-#        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#      with:
-#        tag_name: v${{ github.run_number }}
-#        name: Stockpiler v${{ github.run_number }}
-#        body: |
-#          Automated build of Stockpiler application.
-#          
-#          **Downloads:**
-#          - Windows: Stockpiler-Windows (contains dist/ folder with executable)
-#          - macOS: Stockpiler-macOS (contains dist/ folder with executable)
-#          - Linux: Stockpiler-Linux (contains dist/ folder with executable)
-#          
-#          Built on: ${{ github.run_number }}
-#        files: |
-#          ./Stockpiler-Windows/dist/**
-#          ./Stockpiler-macOS/dist/**
-#          ./Stockpiler-Linux/dist/**
